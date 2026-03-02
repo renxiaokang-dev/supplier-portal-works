@@ -11,7 +11,7 @@ const i18n = {
         
         // POD申诉页面
         workOrder: '工单管理',
-        podPenalty: 'POD处罚',
+        podPenalty: 'POD不合格',
         podErrorCount: 'POD错误单量',
         penaltyAmount: '处罚金额',
         trackingNo: '运单号',
@@ -88,7 +88,7 @@ const i18n = {
         colZone: '所属网格',
         colBoxNo: '分箱号',
         colWorkOrderNo: '工单编号',
-        colDriver: '司机',
+        colDriver: '司机编号',
         all: '全部',
         multiTrackingTip: '多个运单号用换行或逗号分隔',
         appealDeadline: '截止申诉日期',
@@ -128,7 +128,7 @@ const i18n = {
         
         // POD Penalty Page
         workOrder: 'Work Order',
-        podPenalty: 'POD Penalty',
+        podPenalty: 'POD Non-compliance',
         podErrorCount: 'POD Error Count',
         penaltyAmount: 'Penalty Amount',
         trackingNo: 'Tracking No.',
@@ -205,7 +205,7 @@ const i18n = {
         colZone: 'Zone',
         colBoxNo: 'Box No.',
         colWorkOrderNo: 'Work Order No.',
-        colDriver: 'Driver',
+        colDriver: 'Driver ID',
         all: 'All',
         multiTrackingTip: 'Separate multiple tracking numbers with line breaks or commas',
         appealDeadline: 'Appeal Deadline',
@@ -244,7 +244,7 @@ const i18n = {
         
         // Página de Penalización POD
         workOrder: 'Orden de Trabajo',
-        podPenalty: 'Penalización POD',
+        podPenalty: 'POD No Conforme',
         podErrorCount: 'Cantidad de Errores POD',
         penaltyAmount: 'Monto de Penalización',
         trackingNo: 'Nº de Seguimiento',
@@ -321,7 +321,7 @@ const i18n = {
         colZone: 'Zona',
         colBoxNo: 'Nº Caja',
         colWorkOrderNo: 'Nº Orden Trabajo',
-        colDriver: 'Conductor',
+        colDriver: 'ID Conductor',
         all: 'Todos',
         multiTrackingTip: 'Separe múltiples números con saltos de línea o comas',
         appealDeadline: 'Fecha Límite Apelación',
@@ -1090,22 +1090,20 @@ const PodPenaltyPage = {
                         <!-- 运单信息 -->
                         <div class="bg-blue-50/40 border border-blue-100 p-5 mb-5 rounded-lg">
                             <div class="grid grid-cols-4 gap-x-6 gap-y-3 text-sm">
-                                <div><span class="text-gray-500">运单号：</span><span class="text-gray-700">{{ selectedRecord.trackingNo }}</span></div>
+                                <div><span class="text-gray-500">运单号：</span><span class="text-gray-700 font-medium">{{ selectedRecord.trackingNo }}</span></div>
                                 <div><span class="text-gray-500">工单编号：</span><span class="text-gray-700">{{ selectedRecord.workOrderNo }}</span></div>
                                 <div><span class="text-gray-500">查验日期：</span><span class="text-gray-700">{{ selectedRecord.inspectDate }}</span></div>
-                                <div><span class="text-gray-500">扣罚金额：</span><span class="text-orange-600 font-semibold">\${{ selectedRecord.penaltyAmount }}</span></div>
+                                <div><span class="text-gray-500">处罚金额：</span><span class="text-orange-600 font-semibold">\${{ selectedRecord.penaltyAmount }}</span></div>
+                                <div><span class="text-gray-500">司机编号：</span><span class="text-gray-700">{{ selectedRecord.driver }}</span></div>
                                 <div><span class="text-gray-500">提货仓库：</span><span class="text-gray-700">{{ selectedRecord.warehouse }}</span></div>
                                 <div><span class="text-gray-500">所属网格：</span><span class="text-gray-700">{{ selectedRecord.zone }}</span></div>
                                 <div><span class="text-gray-500">分箱号：</span><span class="text-gray-700">{{ selectedRecord.boxNo }}</span></div>
                                 <div><span class="text-gray-500">签收日期：</span><span class="text-gray-700">{{ selectedRecord.signDate }}</span></div>
+                                <div><span class="text-gray-500">申诉状态：</span><span :class="['px-2 py-0.5 text-xs font-medium rounded-full inline-block', getStatusClass(selectedRecord.status)]">{{ getStatusLabel(selectedRecord.status) }}</span></div>
+                                <div v-if="selectedRecord.appealDeadline"><span class="text-gray-500">截止申诉日期：</span><span class="text-gray-700">{{ selectedRecord.appealDeadline }}</span></div>
+                                <div v-if="selectedRecord.reviewTime"><span class="text-gray-500">审核时间：</span><span class="text-gray-700">{{ selectedRecord.reviewTime }}</span></div>
                                 <div class="col-span-4"><span class="text-gray-500">收货地址：</span><span class="text-gray-700">{{ selectedRecord.address }}</span></div>
                                 <div class="col-span-4 pt-2 border-t border-blue-100"><span class="text-red-500">POD错误原因：</span><span class="text-red-500">{{ selectedRecord.errorReason }}</span></div>
-                                <div v-if="selectedRecord.status === 'rejected'" class="col-span-4 pt-2 border-t border-blue-100">
-                                    <span class="text-orange-600">申诉次数：</span>
-                                    <span class="text-orange-600 font-semibold">{{ selectedRecord.appealCount || 0 }} / 2</span>
-                                    <span v-if="selectedRecord.appealCount >= 2" class="ml-2 text-red-600 text-xs">(已达申诉上限)</span>
-                                    <span v-else class="ml-2 text-gray-500 text-xs">(还可申诉 {{ 2 - (selectedRecord.appealCount || 0) }} 次)</span>
-                                </div>
                             </div>
                         </div>
                         
@@ -1127,7 +1125,7 @@ const PodPenaltyPage = {
                                 <label class="block text-sm text-gray-600 mb-1.5">申诉类型 <span class="text-red-500">*</span></label>
                                 <select v-model="appealForm.type" class="w-full px-3 py-2 border border-gray-300 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary rounded-lg bg-white transition-all">
                                     <option value="">请选择申诉类型</option>
-                                    <option v-for="type in appealTypes" :key="type.value" :value="type.value">{{ type.label }} - {{ type.description }}</option>
+                                    <option v-for="type in appealTypes" :key="type.value" :value="type.value">{{ type.label }}</option>
                                 </select>
                             </div>
                             
@@ -1197,7 +1195,7 @@ const PodPenaltyPage = {
             <div v-if="showDetailDialog" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4">
                 <div class="bg-white w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl">
                     <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center z-10">
-                        <h3 class="text-lg font-semibold text-gray-700">POD处罚详情</h3>
+                        <h3 class="text-lg font-semibold text-gray-700">POD不合格详情</h3>
                         <button @click="showDetailDialog = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
                     </div>
                     
@@ -1209,7 +1207,7 @@ const PodPenaltyPage = {
                                 <div><span class="text-gray-500">工单编号：</span><span class="text-gray-700">{{ selectedRecord.workOrderNo }}</span></div>
                                 <div><span class="text-gray-500">查验日期：</span><span class="text-gray-700">{{ selectedRecord.inspectDate }}</span></div>
                                 <div><span class="text-gray-500">处罚金额：</span><span class="text-orange-600 font-semibold">\${{ selectedRecord.status === 'approved' ? '0.00' : selectedRecord.penaltyAmount }}</span></div>
-                                <div><span class="text-gray-500">司机：</span><span class="text-gray-700">{{ selectedRecord.driver }}</span></div>
+                                <div><span class="text-gray-500">司机编号：</span><span class="text-gray-700">{{ selectedRecord.driver }}</span></div>
                                 <div><span class="text-gray-500">提货仓库：</span><span class="text-gray-700">{{ selectedRecord.warehouse }}</span></div>
                                 <div><span class="text-gray-500">所属网格：</span><span class="text-gray-700">{{ selectedRecord.zone }}</span></div>
                                 <div><span class="text-gray-500">分箱号：</span><span class="text-gray-700">{{ selectedRecord.boxNo }}</span></div>
@@ -1315,7 +1313,7 @@ const PodPenaltyPage = {
                                             <label class="block text-xs text-gray-600 mb-1">申诉类型 <span class="text-red-500">*</span></label>
                                             <select v-model="batchAppealForms[record.id].type" :disabled="batchAppealForms[record.id]?.submitted" class="w-full px-3 py-2 border border-gray-300 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary rounded-lg bg-white disabled:bg-gray-100">
                                                 <option value="">请选择申诉类型</option>
-                                                <option v-for="type in appealTypes" :key="type.value" :value="type.value">{{ type.label }} - {{ type.description }}</option>
+                                                <option v-for="type in appealTypes" :key="type.value" :value="type.value">{{ type.label }}</option>
                                             </select>
                                         </div>
                                         
