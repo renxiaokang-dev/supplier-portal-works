@@ -789,10 +789,6 @@ const PodPenaltyPage = {
                         {{ t('rejected') }} <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-red-100 text-red-600">{{ statusCounts.rejected }}</span>
                     </button>
                     <div class="flex-1"></div>
-                    <div class="flex items-center gap-4 px-5">
-                        <span class="text-sm text-gray-500">{{ t('podErrorCount') }}: <b class="text-blue-600">{{ filteredRecords.length }}</b></span>
-                        <span class="text-sm text-gray-500">{{ t('penaltyAmount') }}: <b class="text-orange-600">\${{ filteredPenalty }}</b></span>
-                    </div>
                 </div>
             </div>
             
@@ -1093,7 +1089,6 @@ const PodPenaltyPage = {
                                 <div><span class="text-gray-500">运单号：</span><span class="text-gray-700 font-medium">{{ selectedRecord.trackingNo }}</span></div>
                                 <div><span class="text-gray-500">工单编号：</span><span class="text-gray-700">{{ selectedRecord.workOrderNo }}</span></div>
                                 <div><span class="text-gray-500">查验日期：</span><span class="text-gray-700">{{ selectedRecord.inspectDate }}</span></div>
-                                <div><span class="text-gray-500">处罚金额：</span><span class="text-orange-600 font-semibold">\${{ selectedRecord.penaltyAmount }}</span></div>
                                 <div><span class="text-gray-500">司机编号：</span><span class="text-gray-700">{{ selectedRecord.driver }}</span></div>
                                 <div><span class="text-gray-500">提货仓库：</span><span class="text-gray-700">{{ selectedRecord.warehouse }}</span></div>
                                 <div><span class="text-gray-500">所属网格：</span><span class="text-gray-700">{{ selectedRecord.zone }}</span></div>
@@ -1206,7 +1201,6 @@ const PodPenaltyPage = {
                                 <div><span class="text-gray-500">运单号：</span><span class="text-gray-700 font-medium">{{ selectedRecord.trackingNo }}</span></div>
                                 <div><span class="text-gray-500">工单编号：</span><span class="text-gray-700">{{ selectedRecord.workOrderNo }}</span></div>
                                 <div><span class="text-gray-500">查验日期：</span><span class="text-gray-700">{{ selectedRecord.inspectDate }}</span></div>
-                                <div><span class="text-gray-500">处罚金额：</span><span class="text-orange-600 font-semibold">\${{ selectedRecord.status === 'approved' ? '0.00' : selectedRecord.penaltyAmount }}</span></div>
                                 <div><span class="text-gray-500">司机编号：</span><span class="text-gray-700">{{ selectedRecord.driver }}</span></div>
                                 <div><span class="text-gray-500">提货仓库：</span><span class="text-gray-700">{{ selectedRecord.warehouse }}</span></div>
                                 <div><span class="text-gray-500">所属网格：</span><span class="text-gray-700">{{ selectedRecord.zone }}</span></div>
@@ -1274,7 +1268,6 @@ const PodPenaltyPage = {
                                 <div class="flex items-center gap-6 text-sm">
                                     <span class="font-medium text-gray-700">{{ index + 1 }}. {{ record.trackingNo }}</span>
                                     <span class="text-gray-500">{{ record.address }}</span>
-                                    <span class="text-orange-600 font-semibold">\${{ record.penaltyAmount }}</span>
                                     <span class="text-gray-500">{{ record.inspectDate }}</span>
                                 </div>
                                 <div class="flex items-center gap-2">
@@ -1479,7 +1472,7 @@ const PodPenaltyPage = {
                 ];
                 const statuses = ['pending','reviewing','approved','rejected','autoApproved'];
                 const warehouses = ['LAX-WH-01','LAX-WH-02','LAX-WH-03'];
-                const drivers = ['John Smith', 'Mike Johnson', 'David Lee', 'Tom Brown', 'James Wilson', 'Robert Garcia', 'William Martinez', 'Richard Anderson', 'Joseph Taylor', 'Charles Thomas'];
+                const drivers = ['DVR034921', 'DVR015306', 'DVR008500', 'DVR031891', 'DVR031696'];
                 const zones = ['LAX-A-001','LAX-A-002','LAX-A-003','LAX-A-004','LAX-A-005','LAX-B-006','LAX-B-007','LAX-B-008','LAX-B-009','LAX-B-010','LAX-B-011','LAX-B-012','LAX-B-013'];
                 const photos = [
                     'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=300&fit=crop',
