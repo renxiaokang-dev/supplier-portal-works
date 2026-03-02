@@ -11,9 +11,9 @@ const i18n = {
         
         // POD申诉页面
         workOrder: '工单管理',
-        podPenalty: 'POD申诉',
+        podPenalty: 'POD处罚',
         podErrorCount: 'POD错误单量',
-        penaltyAmount: '预扣罚金额',
+        penaltyAmount: '处罚金额',
         trackingNo: '运单号',
         appealStatus: '申诉状态',
         inspectDateFrom: '查验日期（从）',
@@ -76,7 +76,7 @@ const i18n = {
         colAddress: '地址',
         colPhotos: 'POD照片',
         colErrorReason: 'POD错误原因',
-        colPenaltyAmount: '预扣罚金额',
+        colPenaltyAmount: '处罚金额',
         colInspectDate: '查验日期',
         colAppealType: '申诉类型',
         colAppealReason: '申诉原因',
@@ -88,13 +88,16 @@ const i18n = {
         colZone: '所属网格',
         colBoxNo: '分箱号',
         colWorkOrderNo: '工单编号',
+        colDriver: '司机',
         all: '全部',
         multiTrackingTip: '多个运单号用换行或逗号分隔',
         appealDeadline: '截止申诉日期',
         remainingDays: '剩余申诉时间',
         reviewTime: '审核时间',
         days: '天',
+        hours: '小时',
         expired: '已逾期',
+        viewDetail: '查看详情',
         
         // 登录
         login: '登录',
@@ -125,7 +128,7 @@ const i18n = {
         
         // POD Penalty Page
         workOrder: 'Work Order',
-        podPenalty: 'POD Appeal',
+        podPenalty: 'POD Penalty',
         podErrorCount: 'POD Error Count',
         penaltyAmount: 'Penalty Amount',
         trackingNo: 'Tracking No.',
@@ -202,13 +205,16 @@ const i18n = {
         colZone: 'Zone',
         colBoxNo: 'Box No.',
         colWorkOrderNo: 'Work Order No.',
+        colDriver: 'Driver',
         all: 'All',
         multiTrackingTip: 'Separate multiple tracking numbers with line breaks or commas',
         appealDeadline: 'Appeal Deadline',
         remainingDays: 'Remaining Appeal Time',
         reviewTime: 'Review Time',
         days: 'days',
+        hours: 'hours',
         expired: 'Expired',
+        viewDetail: 'View Detail',
         // Login
         login: 'Login',
         passwordLogin: 'Password Login',
@@ -238,7 +244,7 @@ const i18n = {
         
         // Página de Penalización POD
         workOrder: 'Orden de Trabajo',
-        podPenalty: 'Apelación POD',
+        podPenalty: 'Penalización POD',
         podErrorCount: 'Cantidad de Errores POD',
         penaltyAmount: 'Monto de Penalización',
         trackingNo: 'Nº de Seguimiento',
@@ -315,13 +321,16 @@ const i18n = {
         colZone: 'Zona',
         colBoxNo: 'Nº Caja',
         colWorkOrderNo: 'Nº Orden Trabajo',
+        colDriver: 'Conductor',
         all: 'Todos',
         multiTrackingTip: 'Separe múltiples números con saltos de línea o comas',
         appealDeadline: 'Fecha Límite Apelación',
         remainingDays: 'Tiempo Restante Apelación',
         reviewTime: 'Tiempo Revisión',
         days: 'días',
+        hours: 'horas',
         expired: 'Vencido',
+        viewDetail: 'Ver Detalle',
         // Inicio de Sesión
         login: 'Iniciar Sesión',
         passwordLogin: 'Inicio con Contraseña',
@@ -688,7 +697,7 @@ const MainLayout = {
             this.$nextTick(() => {
                 const podPage = this.$refs.podPenaltyPage;
                 if (podPage) {
-                    podPage.activeTab = 'pending';
+                    podPage.activeTab = '';
                 }
             });
         }
@@ -770,9 +779,6 @@ const PodPenaltyPage = {
                     <button @click="activeTab = ''" :class="['px-5 py-3 text-sm font-medium border-b-2 transition-colors', activeTab === '' ? 'border-primary text-primary bg-blue-50/50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50']">
                         {{ t('all') }} <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ records.length }}</span>
                     </button>
-                    <button @click="activeTab = 'pending'" :class="['px-5 py-3 text-sm font-medium border-b-2 transition-colors', activeTab === 'pending' ? 'border-primary text-primary bg-blue-50/50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50']">
-                        {{ t('pending') }} <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ statusCounts.pending }}</span>
-                    </button>
                     <button @click="activeTab = 'reviewing'" :class="['px-5 py-3 text-sm font-medium border-b-2 transition-colors', activeTab === 'reviewing' ? 'border-primary text-primary bg-blue-50/50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50']">
                         {{ t('reviewing') }} <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-orange-100 text-orange-600">{{ statusCounts.reviewing }}</span>
                     </button>
@@ -781,9 +787,6 @@ const PodPenaltyPage = {
                     </button>
                     <button @click="activeTab = 'rejected'" :class="['px-5 py-3 text-sm font-medium border-b-2 transition-colors', activeTab === 'rejected' ? 'border-primary text-primary bg-blue-50/50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50']">
                         {{ t('rejected') }} <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-red-100 text-red-600">{{ statusCounts.rejected }}</span>
-                    </button>
-                    <button @click="activeTab = 'autoApproved'" :class="['px-5 py-3 text-sm font-medium border-b-2 transition-colors', activeTab === 'autoApproved' ? 'border-primary text-primary bg-blue-50/50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50']">
-                        {{ t('autoApproved') }} <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-600">{{ statusCounts.autoApproved }}</span>
                     </button>
                     <div class="flex-1"></div>
                     <div class="flex items-center gap-4 px-5">
@@ -814,8 +817,9 @@ const PodPenaltyPage = {
                     <table class="w-full">
                         <thead class="bg-gray-50/80 border-b border-gray-100 sticky top-0">
                             <tr>
-                                <th v-if="activeTab === '' || activeTab === 'pending' || activeTab === 'rejected'" class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap sticky left-0 bg-gray-50 z-10">操作</th>
-                                <th :class="['px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap sticky bg-gray-50 z-10', (activeTab === '' || activeTab === 'pending' || activeTab === 'rejected') ? 'left-[68px]' : 'left-0']">{{ t('colTrackingNo') }}</th>
+                                <th v-if="activeTab === '' || activeTab === 'rejected'" class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap sticky left-0 bg-gray-50 z-10">操作</th>
+                                <th v-if="activeTab !== '' && activeTab !== 'rejected'" class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap sticky left-0 bg-gray-50 z-10">操作</th>
+                                <th :class="['px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap sticky bg-gray-50 z-10', 'left-[68px]']">{{ t('colTrackingNo') }}</th>
                                 <th v-if="isColVisible('address')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colAddress') }}</th>
                                 <th v-if="isColVisible('photos')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colPhotos') }}</th>
                                 <th v-if="isColVisible('errorReason')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colErrorReason') }}</th>
@@ -828,6 +832,7 @@ const PodPenaltyPage = {
                                 <th v-if="isColVisible('appealReason') && (activeTab === 'reviewing' || activeTab === 'approved' || activeTab === 'rejected')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colAppealReason') }}</th>
                                 <th v-if="isColVisible('appealAttachment') && (activeTab === 'reviewing' || activeTab === 'approved' || activeTab === 'rejected')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colAppealAttachment') }}</th>
                                 <th v-if="isColVisible('appealStatus')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colAppealStatus') }}</th>
+                                <th v-if="isColVisible('driver')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colDriver') }}</th>
                                 <th v-if="isColVisible('warehouse')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colWarehouse') }}</th>
                                 <th v-if="isColVisible('boxCreateDate')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colBoxCreateDate') }}</th>
                                 <th v-if="isColVisible('signDate')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colSignDate') }}</th>
@@ -838,18 +843,23 @@ const PodPenaltyPage = {
                         </thead>
                         <tbody class="divide-y divide-gray-50">
                             <tr v-for="item in paginatedRecords" :key="item.id" class="hover:bg-blue-50/30 transition-colors">
-                                <td v-if="activeTab === '' || activeTab === 'pending' || activeTab === 'rejected'" class="px-4 py-3.5 whitespace-nowrap sticky left-0 bg-white z-10 text-center">
+                                <td v-if="activeTab === '' || activeTab === 'rejected'" class="px-4 py-3.5 whitespace-nowrap sticky left-0 bg-white z-10 text-center">
                                     <button v-if="item.status === 'pending'" @click="openAppealDialog(item)" 
                                             class="px-3.5 py-1.5 bg-primary text-white text-xs font-medium hover:bg-primary-dark rounded-md transition-colors">
                                         申诉
                                     </button>
-                                    <button v-else-if="item.status === 'rejected' && item.appealCount < 2" @click="openAppealDialog(item)" 
-                                            class="px-3.5 py-1.5 bg-orange-500 text-white text-xs font-medium hover:bg-orange-600 rounded-md transition-colors">
-                                        再次申诉
+                                    <button v-else-if="item.status === 'reviewing' || item.status === 'approved' || item.status === 'rejected' || item.status === 'autoApproved'" @click="viewDetail(item)" 
+                                            class="px-3.5 py-1.5 text-gray-500 hover:text-primary text-xs hover:bg-gray-50 rounded-md transition-colors">
+                                        {{ t('viewDetail') }}
                                     </button>
                                     <span v-else class="text-gray-300 text-xs">-</span>
                                 </td>
-                                <td :class="['px-4 py-3.5 text-primary font-medium text-sm whitespace-nowrap sticky bg-white z-10', (activeTab === '' || activeTab === 'pending' || activeTab === 'rejected') ? 'left-[68px]' : 'left-0']">{{ item.trackingNo }}</td>
+                                <td v-if="activeTab !== '' && activeTab !== 'rejected'" class="px-4 py-3.5 whitespace-nowrap sticky left-0 bg-white z-10 text-center">
+                                    <button @click="viewDetail(item)" class="px-3.5 py-1.5 text-gray-500 hover:text-primary text-xs hover:bg-gray-50 rounded-md transition-colors">
+                                        {{ t('viewDetail') }}
+                                    </button>
+                                </td>
+                                <td class="px-4 py-3.5 text-primary font-medium text-sm whitespace-nowrap sticky bg-white z-10 left-[68px]">{{ item.trackingNo }}</td>
                                 <td v-if="isColVisible('address')" class="px-4 py-3.5 text-sm text-gray-600 max-w-[200px] truncate" :title="item.address">{{ item.address }}</td>
                                 <td v-if="isColVisible('photos')" class="px-4 py-3.5">
                                     <div class="flex gap-1.5">
@@ -879,10 +889,10 @@ const PodPenaltyPage = {
                                 <td v-if="isColVisible('appealDeadline') && (activeTab === '' || activeTab === 'pending' || activeTab === 'autoApproved')" class="px-4 py-3.5 text-sm whitespace-nowrap" :class="(item.status === 'pending' || item.status === 'autoApproved') ? 'text-gray-700' : 'text-gray-400'">{{ item.appealDeadline }}</td>
                                 <td v-if="isColVisible('remainingDays') && (activeTab === '' || activeTab === 'pending')" class="px-4 py-3.5 text-sm font-medium whitespace-nowrap">
                                     <span v-if="item.status === 'pending'" 
-                                          :class="item.remainingDays > 7 ? 'text-green-600' : 
-                                                 (item.remainingDays >= 3 ? 'text-yellow-600' : 
-                                                 (item.remainingDays > 1 ? 'text-orange-600' : 'text-red-600'))">
-                                        {{ item.remainingDays + ' ' + t('days') }}
+                                          :class="item.remainingHours > 72 ? 'text-green-600' : 
+                                                 (item.remainingHours >= 48 ? 'text-yellow-600' : 
+                                                 (item.remainingHours > 24 ? 'text-orange-600' : 'text-red-600'))">
+                                        {{ formatRemainingTime(item.remainingHours) }}
                                     </span>
                                     <span v-else class="text-gray-400">-</span>
                                 </td>
@@ -903,6 +913,7 @@ const PodPenaltyPage = {
                                         {{ getStatusLabel(item.status) }}
                                     </span>
                                 </td>
+                                <td v-if="isColVisible('driver')" class="px-4 py-3.5 text-sm text-gray-600 whitespace-nowrap">{{ item.driver }}</td>
                                 <td v-if="isColVisible('warehouse')" class="px-4 py-3.5 text-sm text-gray-600 whitespace-nowrap">{{ item.warehouse }}</td>
                                 <td v-if="isColVisible('boxCreateDate')" class="px-4 py-3.5 text-sm text-gray-500 whitespace-nowrap">{{ item.boxCreateDate }}</td>
                                 <td v-if="isColVisible('signDate')" class="px-4 py-3.5 text-sm text-gray-500 whitespace-nowrap">{{ item.signDate }}</td>
@@ -931,7 +942,7 @@ const PodPenaltyPage = {
             </div>
 
             <!-- 照片预览弹窗 - 白色背景，居中展示 -->
-            <div v-if="showPhotoViewer" @click.self="showPhotoViewer = false" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-8">
+            <div v-if="showPhotoViewer" @click.self="showPhotoViewer = false" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[10000] p-8">
                 <!-- 白色弹窗容器 - 宽度占屏幕2/3 -->
                 <div class="bg-white rounded-2xl shadow-2xl w-auto max-w-[90vw] max-h-[90vh] flex flex-col relative">
                     <!-- 顶部标题栏 -->
@@ -1186,6 +1197,69 @@ const PodPenaltyPage = {
                 </div>
             </div>
 
+            <!-- 详情查看弹窗 -->
+            <div v-if="showDetailDialog" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4">
+                <div class="bg-white w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl">
+                    <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center z-10">
+                        <h3 class="text-lg font-semibold text-gray-700">POD处罚详情</h3>
+                        <button @click="showDetailDialog = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+                    </div>
+                    
+                    <div class="p-6">
+                        <!-- 运单信息 -->
+                        <div class="bg-blue-50/40 border border-blue-100 p-5 mb-5 rounded-lg">
+                            <div class="grid grid-cols-4 gap-x-6 gap-y-3 text-sm">
+                                <div><span class="text-gray-500">运单号：</span><span class="text-gray-700 font-medium">{{ selectedRecord.trackingNo }}</span></div>
+                                <div><span class="text-gray-500">工单编号：</span><span class="text-gray-700">{{ selectedRecord.workOrderNo }}</span></div>
+                                <div><span class="text-gray-500">查验日期：</span><span class="text-gray-700">{{ selectedRecord.inspectDate }}</span></div>
+                                <div><span class="text-gray-500">处罚金额：</span><span class="text-orange-600 font-semibold">\${{ selectedRecord.status === 'approved' ? '0.00' : selectedRecord.penaltyAmount }}</span></div>
+                                <div><span class="text-gray-500">司机：</span><span class="text-gray-700">{{ selectedRecord.driver }}</span></div>
+                                <div><span class="text-gray-500">提货仓库：</span><span class="text-gray-700">{{ selectedRecord.warehouse }}</span></div>
+                                <div><span class="text-gray-500">所属网格：</span><span class="text-gray-700">{{ selectedRecord.zone }}</span></div>
+                                <div><span class="text-gray-500">分箱号：</span><span class="text-gray-700">{{ selectedRecord.boxNo }}</span></div>
+                                <div><span class="text-gray-500">签收日期：</span><span class="text-gray-700">{{ selectedRecord.signDate }}</span></div>
+                                <div><span class="text-gray-500">申诉状态：</span><span :class="['px-2 py-0.5 text-xs font-medium rounded-full inline-block', getStatusClass(selectedRecord.status)]">{{ getStatusLabel(selectedRecord.status) }}</span></div>
+                                <div v-if="selectedRecord.appealDeadline"><span class="text-gray-500">截止申诉日期：</span><span class="text-gray-700">{{ selectedRecord.appealDeadline }}</span></div>
+                                <div v-if="selectedRecord.reviewTime"><span class="text-gray-500">审核时间：</span><span class="text-gray-700">{{ selectedRecord.reviewTime }}</span></div>
+                                <div class="col-span-4"><span class="text-gray-500">收货地址：</span><span class="text-gray-700">{{ selectedRecord.address }}</span></div>
+                                <div class="col-span-4 pt-2 border-t border-blue-100"><span class="text-red-500">POD错误原因：</span><span class="text-red-500">{{ selectedRecord.errorReason }}</span></div>
+                            </div>
+                        </div>
+                        
+                        <!-- POD照片 -->
+                        <div class="mb-5">
+                            <h4 class="text-sm font-medium text-gray-600 mb-3">POD照片</h4>
+                            <div class="grid grid-cols-6 gap-2">
+                                <div v-for="(photo, index) in selectedRecord.photos" :key="index" 
+                                     @click="viewPhotos(selectedRecord.photos, index)"
+                                     class="aspect-square border border-gray-200 rounded-lg cursor-pointer hover:opacity-80 hover:border-primary transition-all overflow-hidden group">
+                                    <img :src="photo" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 申诉信息（如果已申诉） -->
+                        <div v-if="selectedRecord.appealType" class="bg-gray-50 border border-gray-200 p-5 rounded-lg">
+                            <h4 class="text-sm font-medium text-gray-700 mb-3">申诉信息</h4>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div><span class="text-gray-500">申诉类型：</span><span class="text-gray-700">{{ selectedRecord.appealType }}</span></div>
+                                <div v-if="selectedRecord.attachmentCount"><span class="text-gray-500">申诉附件：</span>
+                                    <button @click="viewAttachments(selectedRecord)" class="text-primary hover:text-primary-dark">
+                                        {{ selectedRecord.attachmentCount }} 个附件
+                                    </button>
+                                </div>
+                                <div class="col-span-2"><span class="text-gray-500">申诉原因：</span><span class="text-gray-700">{{ selectedRecord.appealReason }}</span></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 关闭按钮 -->
+                        <div class="flex justify-end mt-6 pt-5 border-t border-gray-200">
+                            <button @click="showDetailDialog = false" class="px-6 py-2.5 bg-white border border-gray-300 text-gray-600 text-sm hover:bg-gray-50 rounded-lg transition-colors">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 批量导入弹窗 -->
             
             <!-- 批量申诉弹窗 -->
@@ -1343,10 +1417,8 @@ const PodPenaltyPage = {
             ],
             zoneOptions: ['LAX-A-001','LAX-A-002','LAX-A-003','LAX-A-004','LAX-A-005','LAX-B-006','LAX-B-007','LAX-B-008','LAX-B-009','LAX-B-010','LAX-B-011','LAX-B-012','LAX-B-013'],
             allColumns: [
-                { key: 'address', labelKey: 'colAddress', visible: true, fixed: false },
                 { key: 'photos', labelKey: 'colPhotos', visible: true, fixed: false },
                 { key: 'errorReason', labelKey: 'colErrorReason', visible: true, fixed: false },
-                { key: 'penaltyAmount', labelKey: 'colPenaltyAmount', visible: true, fixed: false },
                 { key: 'inspectDate', labelKey: 'colInspectDate', visible: true, fixed: false },
                 { key: 'appealDeadline', labelKey: 'appealDeadline', visible: true, fixed: false },
                 { key: 'remainingDays', labelKey: 'remainingDays', visible: true, fixed: false },
@@ -1355,6 +1427,7 @@ const PodPenaltyPage = {
                 { key: 'appealReason', labelKey: 'colAppealReason', visible: true, fixed: false },
                 { key: 'appealAttachment', labelKey: 'colAppealAttachment', visible: true, fixed: false },
                 { key: 'appealStatus', labelKey: 'colAppealStatus', visible: true, fixed: false },
+                { key: 'driver', labelKey: 'colDriver', visible: false, fixed: false },
                 { key: 'warehouse', labelKey: 'colWarehouse', visible: false, fixed: false },
                 { key: 'boxCreateDate', labelKey: 'colBoxCreateDate', visible: false, fixed: false },
                 { key: 'signDate', labelKey: 'colSignDate', visible: false, fixed: false },
@@ -1367,6 +1440,7 @@ const PodPenaltyPage = {
             pageSizeOptions: [10, 20, 50, 100],
             totalRecords: 24,
             showAppealDialog: false,
+            showDetailDialog: false,
             showPhotoViewer: false,
             showAttachmentPreview: false,
             previewingAttachment: null,
@@ -1388,7 +1462,7 @@ const PodPenaltyPage = {
             },
             appealTypes: [
                 { value: 'misjudge', label: 'POD误判', description: '认为POD本身合格，申请免除罚款' },
-                { value: 'modify', label: '修改错误原因', description: '认可POD不合格，但违规类型过重' },
+                { value: 'modify', label: '修改错误原因', description: '认可POD不合格，但违规类型错误' },
                 { value: 'reported', label: '已报备', description: '配送前已通过其他渠道向官方报备' },
                 { value: 'other', label: '其他原因', description: '自定义填写说明' }
             ],
@@ -1411,6 +1485,7 @@ const PodPenaltyPage = {
                 ];
                 const statuses = ['pending','reviewing','approved','rejected','autoApproved'];
                 const warehouses = ['LAX-WH-01','LAX-WH-02','LAX-WH-03'];
+                const drivers = ['John Smith', 'Mike Johnson', 'David Lee', 'Tom Brown', 'James Wilson', 'Robert Garcia', 'William Martinez', 'Richard Anderson', 'Joseph Taylor', 'Charles Thomas'];
                 const zones = ['LAX-A-001','LAX-A-002','LAX-A-003','LAX-A-004','LAX-A-005','LAX-B-006','LAX-B-007','LAX-B-008','LAX-B-009','LAX-B-010','LAX-B-011','LAX-B-012','LAX-B-013'];
                 const photos = [
                     'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=300&fit=crop',
@@ -1458,21 +1533,21 @@ const PodPenaltyPage = {
                     deadlineDate.setDate(deadlineDate.getDate() + 7); // 改为7天
                     var appealDeadline = deadlineDate.toISOString().split('T')[0];
                     
-                    // 计算剩余天数（使用2026-02-10作为当前日期）
-                    var today = new Date('2026-02-10'); // 模拟当前日期
-                    var remainingDays = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+                    // 计算剩余小时数（使用2026-02-10 10:00:00作为当前时间）
+                    var today = new Date('2026-02-10T10:00:00'); // 模拟当前时间
+                    var remainingHours = Math.floor((deadlineDate - today) / (1000 * 60 * 60));
                     
-                    // 根据i的值设置不同的剩余天数，构造示例数据
-                    if (i === 0) remainingDays = 1;      // 红色（1天）
-                    else if (i === 1) remainingDays = 2; // 橙色（2天）
-                    else if (i === 2) remainingDays = 3; // 黄色（3天）
-                    else if (i === 3) remainingDays = 5; // 黄色（5天）
-                    else if (i === 4) remainingDays = 7; // 绿色（7天）
-                    else if (i === 5) remainingDays = 8; // 绿色（8天，>7）
+                    // 根据i的值设置不同的剩余小时数，构造示例数据
+                    if (i === 0) remainingHours = 8;       // 8小时（红色）
+                    else if (i === 1) remainingHours = 20;  // 20小时（红色）
+                    else if (i === 2) remainingHours = 30;  // 30小时（橙色）
+                    else if (i === 3) remainingHours = 50;  // 50小时（橙色）
+                    else if (i === 4) remainingHours = 80;  // 80小时（黄色）
+                    else if (i === 5) remainingHours = 150; // 150小时（绿色）
                     
                     // 确保待申诉记录不逾期
-                    if (remainingDays <= 0) {
-                        remainingDays = 1; // 至少1天
+                    if (remainingHours <= 0) {
+                        remainingHours = 8; // 至少8小时
                     }
                     
                     arr.push({
@@ -1481,6 +1556,7 @@ const PodPenaltyPage = {
                         address: (100 + i * 37) + ' ' + streets[i] + ', Los Angeles, CA 900' + String(i+1).padStart(2,'0'),
                         photos: ps,
                         errorReason: e.reason,
+                        driver: drivers[i % drivers.length],
                         warehouse: warehouses[i % 3],
                         boxCreateDate: '2026-02-' + String(d1).padStart(2,'0'),
                         signDate: '2026-02-' + String(d2).padStart(2,'0'),
@@ -1489,7 +1565,7 @@ const PodPenaltyPage = {
                         penaltyAmount: e.amount,
                         inspectDate: '2026-02-' + String(d3).padStart(2,'0'),
                         appealDeadline: appealDeadline,
-                        remainingDays: remainingDays,
+                        remainingHours: remainingHours,
                         reviewTime: null,
                         appealType: null,
                         appealReason: null,
@@ -1519,25 +1595,25 @@ const PodPenaltyPage = {
                     deadlineDate.setDate(deadlineDate.getDate() + 7); // 改为7天
                     var appealDeadline = deadlineDate.toISOString().split('T')[0];
                     
-                    // 计算剩余天数（使用2026-02-10作为当前日期）
-                    var today = new Date('2026-02-10'); // 模拟当前日期
-                    var remainingDays = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+                    // 计算剩余小时数（使用2026-02-10 10:00:00作为当前时间）
+                    var today = new Date('2026-02-10T10:00:00'); // 模拟当前时间
+                    var remainingHours = Math.floor((deadlineDate - today) / (1000 * 60 * 60));
                     
-                    // 如果已逾期（remainingDays <= 0），pending状态自动转为超期自动认可
-                    if (s === 'pending' && remainingDays <= 0) {
+                    // 如果已逾期（remainingHours <= 0），pending状态自动转为超期自动认可
+                    if (s === 'pending' && remainingHours <= 0) {
                         s = 'autoApproved';
                         hasAppeal = false;
                     }
                     
-                    // 确保remainingDays不大于7天
-                    if (s === 'pending' && remainingDays > 7) {
-                        // 调整查验日期，使remainingDays等于7
-                        var excessDays = remainingDays - 7;
-                        inspectDate.setDate(inspectDate.getDate() - excessDays);
+                    // 确保remainingHours不大于7天（168小时）
+                    if (s === 'pending' && remainingHours > 168) {
+                        // 调整查验日期，使remainingHours等于168
+                        var excessHours = remainingHours - 168;
+                        inspectDate.setHours(inspectDate.getHours() - excessHours);
                         deadlineDate = new Date(inspectDate);
                         deadlineDate.setDate(deadlineDate.getDate() + 7);
                         appealDeadline = deadlineDate.toISOString().split('T')[0];
-                        remainingDays = 7;
+                        remainingHours = 168;
                     }
                     
                     // 计算是否已申诉（pending状态表示未申诉，autoApproved表示超时自动认可也算未申诉）
@@ -1557,6 +1633,7 @@ const PodPenaltyPage = {
                         address: (100 + i * 37) + ' ' + streets[i] + ', Los Angeles, CA 900' + String(i+1).padStart(2,'0'),
                         photos: ps,
                         errorReason: e.reason,
+                        driver: drivers[i % drivers.length],
                         warehouse: warehouses[i % 3],
                         boxCreateDate: '2026-02-' + String(d1).padStart(2,'0'),
                         signDate: '2026-02-' + String(d2).padStart(2,'0'),
@@ -1565,7 +1642,7 @@ const PodPenaltyPage = {
                         penaltyAmount: e.amount,
                         inspectDate: '2026-02-' + String(d3).padStart(2,'0'),
                         appealDeadline: appealDeadline,
-                        remainingDays: remainingDays,
+                        remainingHours: remainingHours,
                         reviewTime: reviewTime,
                         appealType: hasAppeal ? appealTypes[1 + (i % 3)] : null,
                         appealReason: hasAppeal ? appealReasons[1 + (i % appealReasons.length - 1)] : null,
@@ -1658,6 +1735,10 @@ const PodPenaltyPage = {
             this.appealForm = { type: '', reason: '', files: [] };
             this.showAppealDialog = true;
         },
+        viewDetail(record) {
+            this.selectedRecord = record;
+            this.showDetailDialog = true;
+        },
         viewAppeal(record) {
             alert('查看申诉详情：' + record.trackingNo);
         },
@@ -1748,6 +1829,18 @@ const PodPenaltyPage = {
             const sizes = ['B', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        },
+        formatRemainingTime(hours) {
+            if (hours <= 0) return this.t('expired');
+            const days = Math.floor(hours / 24);
+            const remainingHours = hours % 24;
+            if (days > 0 && remainingHours > 0) {
+                return days + this.t('days') + remainingHours + this.t('hours');
+            } else if (days > 0) {
+                return days + this.t('days');
+            } else {
+                return remainingHours + this.t('hours');
+            }
         },
         submitAppeal() {
             // 模拟提交申诉
