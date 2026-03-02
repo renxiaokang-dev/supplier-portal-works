@@ -820,10 +820,8 @@ const PodPenaltyPage = {
                                 <th v-if="activeTab === '' || activeTab === 'rejected'" class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap sticky left-0 bg-gray-50 z-10">操作</th>
                                 <th v-if="activeTab !== '' && activeTab !== 'rejected'" class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap sticky left-0 bg-gray-50 z-10">操作</th>
                                 <th :class="['px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap sticky bg-gray-50 z-10', 'left-[68px]']">{{ t('colTrackingNo') }}</th>
-                                <th v-if="isColVisible('address')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colAddress') }}</th>
                                 <th v-if="isColVisible('photos')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colPhotos') }}</th>
                                 <th v-if="isColVisible('errorReason')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colErrorReason') }}</th>
-                                <th v-if="isColVisible('penaltyAmount')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colPenaltyAmount') }}</th>
                                 <th v-if="isColVisible('inspectDate')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('colInspectDate') }}</th>
                                 <th v-if="isColVisible('appealDeadline') && (activeTab === '' || activeTab === 'pending' || activeTab === 'autoApproved')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('appealDeadline') }}</th>
                                 <th v-if="isColVisible('remainingDays') && (activeTab === '' || activeTab === 'pending')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">{{ t('remainingDays') }}</th>
@@ -860,7 +858,6 @@ const PodPenaltyPage = {
                                     </button>
                                 </td>
                                 <td class="px-4 py-3.5 text-primary font-medium text-sm whitespace-nowrap sticky bg-white z-10 left-[68px]">{{ item.trackingNo }}</td>
-                                <td v-if="isColVisible('address')" class="px-4 py-3.5 text-sm text-gray-600 max-w-[200px] truncate" :title="item.address">{{ item.address }}</td>
                                 <td v-if="isColVisible('photos')" class="px-4 py-3.5">
                                     <div class="flex gap-1.5">
                                         <div v-for="(photo, index) in item.photos.slice(0, 3)" :key="index" 
@@ -884,7 +881,6 @@ const PodPenaltyPage = {
                                 <td v-if="isColVisible('errorReason')" class="px-4 py-3.5 text-red-500 text-sm font-medium max-w-[320px]" :title="item.errorReason">
                                     <span class="whitespace-normal break-words">{{ item.errorReason }}</span>
                                 </td>
-                                <td v-if="isColVisible('penaltyAmount')" class="px-4 py-3.5 text-sm font-semibold whitespace-nowrap" :class="item.status === 'approved' ? 'text-green-600' : 'text-orange-600'">\${{ item.status === 'approved' ? '0.00' : item.penaltyAmount }}</td>
                                 <td v-if="isColVisible('inspectDate')" class="px-4 py-3.5 text-sm text-gray-500 whitespace-nowrap">{{ item.inspectDate }}</td>
                                 <td v-if="isColVisible('appealDeadline') && (activeTab === '' || activeTab === 'pending' || activeTab === 'autoApproved')" class="px-4 py-3.5 text-sm whitespace-nowrap" :class="(item.status === 'pending' || item.status === 'autoApproved') ? 'text-gray-700' : 'text-gray-400'">{{ item.appealDeadline }}</td>
                                 <td v-if="isColVisible('remainingDays') && (activeTab === '' || activeTab === 'pending')" class="px-4 py-3.5 text-sm font-medium whitespace-nowrap">
