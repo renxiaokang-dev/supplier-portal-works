@@ -115,7 +115,34 @@ const i18n = {
         records: '条',
         prevPage: '上一页',
         nextPage: '下一页',
-        perPage: '条/页'
+        perPage: '条/页',
+        
+        // 下载中心
+        downloadCenter: '下载中心',
+        exportTasks: '导出任务',
+        allTasks: '全部',
+        processing: '进行中',
+        completed: '已完成',
+        failed: '失败',
+        taskName: '任务名称',
+        taskStatus: '状态',
+        fileSize: '文件大小',
+        createTime: '创建时间',
+        completeTime: '完成时间',
+        expiryTime: '有效期',
+        download: '下载',
+        delete: '删除',
+        retry: '重试',
+        cancel: '取消',
+        viewDetail: '查看详情',
+        expiresIn: '剩余',
+        expired: '已过期',
+        noTasks: '暂无导出任务',
+        exportCreated: '导出任务已创建，请在下载中心查看进度',
+        confirmDelete: '确认删除此任务？',
+        taskDeleted: '任务已删除',
+        taskCancelled: '任务已取消',
+        downloading: '下载中...'
     },
     en: {
         // Navigation
@@ -231,7 +258,34 @@ const i18n = {
         records: 'records',
         prevPage: 'Previous',
         nextPage: 'Next',
-        perPage: '/ page'
+        perPage: '/ page',
+        
+        // Download Center
+        downloadCenter: 'Download Center',
+        exportTasks: 'Export Tasks',
+        allTasks: 'All',
+        processing: 'Processing',
+        completed: 'Completed',
+        failed: 'Failed',
+        taskName: 'Task Name',
+        taskStatus: 'Status',
+        fileSize: 'File Size',
+        createTime: 'Created',
+        completeTime: 'Completed',
+        expiryTime: 'Expires',
+        download: 'Download',
+        delete: 'Delete',
+        retry: 'Retry',
+        cancel: 'Cancel',
+        viewDetail: 'View Detail',
+        expiresIn: 'Expires in',
+        expired: 'Expired',
+        noTasks: 'No export tasks',
+        exportCreated: 'Export task created, check progress in Download Center',
+        confirmDelete: 'Confirm delete this task?',
+        taskDeleted: 'Task deleted',
+        taskCancelled: 'Task cancelled',
+        downloading: 'Downloading...'
     },
     es: {
         // Navegación
@@ -347,7 +401,34 @@ const i18n = {
         records: 'registros',
         prevPage: 'Anterior',
         nextPage: 'Siguiente',
-        perPage: '/ página'
+        perPage: '/ página',
+        
+        // Centro de Descargas
+        downloadCenter: 'Centro de Descargas',
+        exportTasks: 'Tareas de Exportación',
+        allTasks: 'Todas',
+        processing: 'En Proceso',
+        completed: 'Completadas',
+        failed: 'Fallidas',
+        taskName: 'Nombre de Tarea',
+        taskStatus: 'Estado',
+        fileSize: 'Tamaño',
+        createTime: 'Creado',
+        completeTime: 'Completado',
+        expiryTime: 'Expira',
+        download: 'Descargar',
+        delete: 'Eliminar',
+        retry: 'Reintentar',
+        cancel: 'Cancelar',
+        viewDetail: 'Ver Detalle',
+        expiresIn: 'Expira en',
+        expired: 'Expirado',
+        noTasks: 'No hay tareas de exportación',
+        exportCreated: 'Tarea de exportación creada, verifique el progreso en el Centro de Descargas',
+        confirmDelete: '¿Confirmar eliminar esta tarea?',
+        taskDeleted: 'Tarea eliminada',
+        taskCancelled: 'Tarea cancelada',
+        downloading: 'Descargando...'
     }
 };
 
@@ -454,6 +535,17 @@ const MainLayout = {
                         
                         <!-- 右侧语言切换和用户信息 -->
                         <div class="flex items-center gap-3">
+                            <!-- 下载中心 -->
+                            <div class="relative">
+                                <button @click="showDownloadCenter = !showDownloadCenter" class="relative text-white text-sm px-3 py-2 rounded-md transition-colors hover:bg-white/10 flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
+                                    </svg>
+                                    <span class="hidden lg:inline">{{ t('downloadCenter') }}</span>
+                                    <span v-if="unreadTaskCount > 0" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">{{ unreadTaskCount }}</span>
+                                </button>
+                            </div>
+                            
                             <div class="relative">
                                 <button @click="showLangMenu = !showLangMenu" class="text-white text-sm px-4 py-2 rounded-md transition-colors flex items-center gap-1.5 hover:bg-white/10">
                                     <span>{{ currentLangLabel }}</span>
@@ -581,6 +673,109 @@ const MainLayout = {
                     </div>
                 </div>
             </div>
+            
+            <!-- 下载中心侧边抽屉 -->
+            <teleport to="body">
+                <div v-if="showDownloadCenter" class="fixed inset-0 z-[10000]">
+                    <!-- 遮罩层 -->
+                    <div @click="showDownloadCenter = false" class="absolute inset-0 bg-black/50"></div>
+                    
+                    <!-- 侧边抽屉 -->
+                    <div class="absolute right-0 top-0 bottom-0 w-full max-w-2xl bg-white shadow-2xl flex flex-col">
+                        <!-- 头部 -->
+                        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+                            <h2 class="text-lg font-semibold text-gray-800">{{ t('downloadCenter') }}</h2>
+                            <button @click="showDownloadCenter = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+                        </div>
+                        
+                        <!-- 标签页 -->
+                        <div class="flex border-b border-gray-200 bg-gray-50 px-6">
+                            <button @click="activeTaskTab = 'all'" :class="['px-4 py-3 text-sm font-medium border-b-2 transition-colors', activeTaskTab === 'all' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700']">
+                                {{ t('allTasks') }} <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-gray-200">{{ exportTasks.length }}</span>
+                            </button>
+                            <button @click="activeTaskTab = 'processing'" :class="['px-4 py-3 text-sm font-medium border-b-2 transition-colors', activeTaskTab === 'processing' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700']">
+                                {{ t('processing') }} <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-orange-100 text-orange-600">{{ processingTaskCount }}</span>
+                            </button>
+                            <button @click="activeTaskTab = 'completed'" :class="['px-4 py-3 text-sm font-medium border-b-2 transition-colors', activeTaskTab === 'completed' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700']">
+                                {{ t('completed') }} <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-green-100 text-green-600">{{ completedTaskCount }}</span>
+                            </button>
+                            <button @click="activeTaskTab = 'failed'" :class="['px-4 py-3 text-sm font-medium border-b-2 transition-colors', activeTaskTab === 'failed' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700']">
+                                {{ t('failed') }} <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-red-100 text-red-600">{{ failedTaskCount }}</span>
+                            </button>
+                        </div>
+                        
+                        <!-- 任务列表 -->
+                        <div class="flex-1 overflow-y-auto p-6">
+                            <div v-if="filteredTasks.length === 0" class="flex flex-col items-center justify-center h-full text-gray-400">
+                                <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                <p class="text-sm">{{ t('noTasks') }}</p>
+                            </div>
+                            
+                            <div v-else class="space-y-3">
+                                <div v-for="task in filteredTasks" :key="task.id" class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                    <!-- 任务头部 -->
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-start gap-3 flex-1">
+                                            <div class="text-2xl">📊</div>
+                                            <div class="flex-1 min-w-0">
+                                                <h3 class="text-sm font-medium text-gray-800 truncate">{{ task.fileName }}</h3>
+                                                <div class="flex items-center gap-2 mt-1">
+                                                    <span :class="['text-xs px-2 py-0.5 rounded-full', getTaskStatusClass(task.status)]">
+                                                        {{ getTaskStatusText(task.status) }}
+                                                    </span>
+                                                    <span v-if="task.fileSize" class="text-xs text-gray-500">{{ formatFileSize(task.fileSize) }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 进度条（进行中） -->
+                                    <div v-if="task.status === 'processing'" class="mb-3">
+                                        <div class="flex items-center justify-between text-xs text-gray-600 mb-1">
+                                            <span>{{ task.progress }}%</span>
+                                            <span>{{ task.processedRecords }} / {{ task.totalRecords }}</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-primary h-2 rounded-full transition-all" :style="{ width: task.progress + '%' }"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 任务信息 -->
+                                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-3">
+                                        <div>{{ t('createTime') }}: {{ task.createdAt }}</div>
+                                        <div v-if="task.completedAt">{{ t('completeTime') }}: {{ task.completedAt }}</div>
+                                        <div v-if="task.expiredAt && task.status === 'completed'" class="col-span-2">
+                                            {{ t('expiryTime') }}: {{ task.expiredAt }} 
+                                            <span :class="['ml-1', isTaskExpired(task) ? 'text-red-600' : 'text-green-600']">
+                                                ({{ isTaskExpired(task) ? t('expired') : t('expiresIn') + ' ' + getExpiryDays(task) + t('days') }})
+                                            </span>
+                                        </div>
+                                        <div v-if="task.errorMessage" class="col-span-2 text-red-600">{{ task.errorMessage }}</div>
+                                    </div>
+                                    
+                                    <!-- 操作按钮 -->
+                                    <div class="flex gap-2">
+                                        <button v-if="task.status === 'completed' && !isTaskExpired(task)" @click="downloadTask(task)" class="flex-1 px-3 py-1.5 bg-primary text-white text-xs hover:bg-primary-dark rounded-md transition-colors">
+                                            {{ t('download') }}
+                                        </button>
+                                        <button v-if="task.status === 'failed'" @click="retryTask(task)" class="flex-1 px-3 py-1.5 bg-orange-500 text-white text-xs hover:bg-orange-600 rounded-md transition-colors">
+                                            {{ t('retry') }}
+                                        </button>
+                                        <button v-if="task.status === 'processing'" @click="cancelTask(task)" class="flex-1 px-3 py-1.5 bg-gray-500 text-white text-xs hover:bg-gray-600 rounded-md transition-colors">
+                                            {{ t('cancel') }}
+                                        </button>
+                                        <button @click="deleteTask(task)" class="px-3 py-1.5 bg-white border border-gray-300 text-gray-600 text-xs hover:bg-gray-50 rounded-md transition-colors">
+                                            {{ t('delete') }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </teleport>
         </div>
     `,
     data() {
@@ -593,6 +788,11 @@ const MainLayout = {
             currentPage: 'podPenalty',
             showPendingAlert: false,
             pendingCount: 0,
+            showDownloadCenter: false,
+            activeTaskTab: 'all',
+            unreadTaskCount: 0,
+            exportTasks: [],
+            taskPolling: null,
             languages: [
                 { code: 'zh', label: '简体中文' },
                 { code: 'en', label: 'English' },
@@ -651,6 +851,22 @@ const MainLayout = {
         currentLangLabel() {
             const lang = this.languages.find(l => l.code === this.currentLang);
             return lang ? lang.label : 'English';
+        },
+        filteredTasks() {
+            if (this.activeTaskTab === 'all') return this.exportTasks;
+            if (this.activeTaskTab === 'processing') return this.exportTasks.filter(t => t.status === 'processing' || t.status === 'pending');
+            if (this.activeTaskTab === 'completed') return this.exportTasks.filter(t => t.status === 'completed');
+            if (this.activeTaskTab === 'failed') return this.exportTasks.filter(t => t.status === 'failed');
+            return this.exportTasks;
+        },
+        processingTaskCount() {
+            return this.exportTasks.filter(t => t.status === 'processing' || t.status === 'pending').length;
+        },
+        completedTaskCount() {
+            return this.exportTasks.filter(t => t.status === 'completed').length;
+        },
+        failedTaskCount() {
+            return this.exportTasks.filter(t => t.status === 'failed').length;
         }
     },
     methods: {
@@ -700,7 +916,164 @@ const MainLayout = {
                     podPage.activeTab = '';
                 }
             });
+        },
+        // 下载中心方法
+        loadExportTasks() {
+            // 模拟加载导出任务
+            // 实际应用中应该调用API: GET /api/export/tasks
+            this.exportTasks = [
+                {
+                    id: 1,
+                    taskId: 'EXPORT_20260302_001',
+                    fileName: 'POD不合格记录_2026-02-28.xlsx',
+                    status: 'completed',
+                    fileSize: 2621440,
+                    progress: 100,
+                    totalRecords: 10000,
+                    processedRecords: 10000,
+                    createdAt: '2026-02-28 10:30:00',
+                    completedAt: '2026-02-28 10:32:15',
+                    expiredAt: '2026-03-07 10:32:15',
+                    downloadCount: 0
+                },
+                {
+                    id: 2,
+                    taskId: 'EXPORT_20260302_002',
+                    fileName: 'POD不合格记录_2026-02-27.xlsx',
+                    status: 'processing',
+                    progress: 45,
+                    totalRecords: 8000,
+                    processedRecords: 3600,
+                    createdAt: '2026-02-28 11:00:00',
+                    completedAt: null,
+                    expiredAt: null
+                },
+                {
+                    id: 3,
+                    taskId: 'EXPORT_20260302_003',
+                    fileName: 'POD不合格记录_2026-02-26.xlsx',
+                    status: 'failed',
+                    createdAt: '2026-02-28 09:00:00',
+                    errorMessage: '数据查询超时'
+                }
+            ];
+            
+            // 计算未读数量（已完成但未下载的）
+            this.unreadTaskCount = this.exportTasks.filter(t => t.status === 'completed' && t.downloadCount === 0).length;
+        },
+        startTaskPolling() {
+            // 开始轮询任务状态
+            if (this.taskPolling) return;
+            
+            this.taskPolling = setInterval(() => {
+                // 模拟更新进行中任务的进度
+                this.exportTasks.forEach(task => {
+                    if (task.status === 'processing' && task.progress < 100) {
+                        task.progress = Math.min(100, task.progress + Math.floor(Math.random() * 10));
+                        task.processedRecords = Math.floor(task.totalRecords * task.progress / 100);
+                        
+                        // 模拟任务完成
+                        if (task.progress >= 100) {
+                            task.status = 'completed';
+                            task.completedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                            const expiredDate = new Date();
+                            expiredDate.setDate(expiredDate.getDate() + 7);
+                            task.expiredAt = expiredDate.toISOString().slice(0, 19).replace('T', ' ');
+                            task.fileSize = 2621440;
+                            this.unreadTaskCount++;
+                        }
+                    }
+                });
+            }, 5000);
+        },
+        stopTaskPolling() {
+            if (this.taskPolling) {
+                clearInterval(this.taskPolling);
+                this.taskPolling = null;
+            }
+        },
+        getTaskStatusClass(status) {
+            const classes = {
+                pending: 'bg-gray-100 text-gray-700',
+                processing: 'bg-orange-100 text-orange-700',
+                completed: 'bg-green-100 text-green-700',
+                failed: 'bg-red-100 text-red-700'
+            };
+            return classes[status] || 'bg-gray-100 text-gray-700';
+        },
+        getTaskStatusText(status) {
+            const map = {
+                pending: 'pending',
+                processing: 'processing',
+                completed: 'completed',
+                failed: 'failed'
+            };
+            return this.t(map[status] || status);
+        },
+        formatFileSize(bytes) {
+            if (!bytes) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        },
+        isTaskExpired(task) {
+            if (!task.expiredAt) return false;
+            return new Date(task.expiredAt) < new Date();
+        },
+        getExpiryDays(task) {
+            if (!task.expiredAt) return 0;
+            const diff = new Date(task.expiredAt) - new Date();
+            return Math.ceil(diff / (1000 * 60 * 60 * 24));
+        },
+        downloadTask(task) {
+            // 实际应用中应该调用API: GET /api/export/download/{taskId}
+            alert(this.t('downloading') + ' ' + task.fileName);
+            task.downloadCount++;
+            if (task.downloadCount === 1) {
+                this.unreadTaskCount = Math.max(0, this.unreadTaskCount - 1);
+            }
+        },
+        deleteTask(task) {
+            if (!confirm(this.t('confirmDelete'))) return;
+            
+            // 实际应用中应该调用API: DELETE /api/export/tasks/{taskId}
+            const index = this.exportTasks.findIndex(t => t.id === task.id);
+            if (index > -1) {
+                if (task.status === 'completed' && task.downloadCount === 0) {
+                    this.unreadTaskCount = Math.max(0, this.unreadTaskCount - 1);
+                }
+                this.exportTasks.splice(index, 1);
+                alert(this.t('taskDeleted'));
+            }
+        },
+        retryTask(task) {
+            // 实际应用中应该调用API: POST /api/export/retry/{taskId}
+            task.status = 'pending';
+            task.progress = 0;
+            task.errorMessage = null;
+            setTimeout(() => {
+                task.status = 'processing';
+            }, 1000);
+        },
+        cancelTask(task) {
+            if (!confirm(this.t('confirmDelete'))) return;
+            
+            // 实际应用中应该调用API: POST /api/export/cancel/{taskId}
+            task.status = 'failed';
+            task.errorMessage = '用户取消';
+            alert(this.t('taskCancelled'));
         }
+    },
+    mounted() {
+        // 加载导出任务
+        this.loadExportTasks();
+        // 开始轮询任务状态
+        this.startTaskPolling();
+    },
+    beforeUnmount() {
+        // 停止轮询
+        this.stopTaskPolling();
     }
 };
 
@@ -769,7 +1142,7 @@ const PodPenaltyPage = {
                     </button>
                     <div class="flex-1"></div>
                     <button @click="openBatchAppealDialog" class="px-4 py-2 bg-orange-500 text-white text-sm font-medium hover:bg-orange-600 rounded-md transition-colors">批量申诉</button>
-                    <button class="px-4 py-2 bg-green-600 text-white text-sm font-medium hover:bg-green-700 rounded-md transition-colors">{{ t('exportExcel') }}</button>
+                    <button @click="createExportTask" class="px-4 py-2 bg-green-600 text-white text-sm font-medium hover:bg-green-700 rounded-md transition-colors">{{ t('exportExcel') }}</button>
                 </div>
             </div>
             
@@ -1844,6 +2217,43 @@ const PodPenaltyPage = {
         handleReset() {
             this.filters = { trackingNo: '', dateFrom: this.getDefaultDateFrom(), dateTo: this.getDefaultDateTo(), errorReason: '', warehouse: '', boxCreateDate: '', zone: '', boxNo: '' };
             this.activeTab = '';
+        },
+        createExportTask() {
+            // 创建异步导出任务
+            // 实际应用中应该调用API: POST /api/export/create
+            const taskData = {
+                module: 'pod-non-compliance',
+                filters: this.filters,
+                columns: this.allColumns.filter(c => c.visible).map(c => c.key),
+                fileName: `POD不合格记录_${new Date().toISOString().slice(0, 10)}`
+            };
+            
+            // 模拟创建任务
+            alert(this.t('exportCreated'));
+            
+            // 通知父组件打开下载中心
+            this.$parent.$parent.showDownloadCenter = true;
+            
+            // 模拟添加新任务到下载中心
+            const newTask = {
+                id: Date.now(),
+                taskId: 'EXPORT_' + Date.now(),
+                fileName: taskData.fileName + '.xlsx',
+                status: 'pending',
+                progress: 0,
+                totalRecords: this.filteredRecords.length,
+                processedRecords: 0,
+                createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                completedAt: null,
+                expiredAt: null
+            };
+            
+            this.$parent.$parent.exportTasks.unshift(newTask);
+            
+            // 1秒后开始处理
+            setTimeout(() => {
+                newTask.status = 'processing';
+            }, 1000);
         },
         openBatchAppealDialog() {
             // 获取所有待申诉的运单（固定使用pending状态，不受当前tab影响）
