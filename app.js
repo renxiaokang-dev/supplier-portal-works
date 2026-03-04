@@ -1274,9 +1274,10 @@ const PodPenaltyPage = {
                                     <span v-else class="text-gray-300">-</span>
                                 </td>
                                 <td v-if="isColVisible('appealStatus')" class="px-4 py-3.5 whitespace-nowrap">
-                                    <span :class="['px-2.5 py-1 text-xs font-medium rounded-full', getStatusClass(item.status)]">
+                                    <span v-if="item.status !== 'pending'" :class="['px-2.5 py-1 text-xs font-medium rounded-full', getStatusClass(item.status)]">
                                         {{ getStatusLabel(item.status) }}
                                     </span>
+                                    <span v-else class="text-gray-300 text-xs">-</span>
                                 </td>
                                 <td v-if="isColVisible('driver')" class="px-4 py-3.5 text-sm text-gray-600 whitespace-nowrap">{{ item.driver }}</td>
                                 <td v-if="isColVisible('warehouse')" class="px-4 py-3.5 text-sm text-gray-600 whitespace-nowrap">{{ item.warehouse }}</td>
@@ -1467,7 +1468,7 @@ const PodPenaltyPage = {
                                 <div><span class="text-gray-500">所属网格：</span><span class="text-gray-700">{{ selectedRecord.zone }}</span></div>
                                 <div><span class="text-gray-500">分箱号：</span><span class="text-gray-700">{{ selectedRecord.boxNo }}</span></div>
                                 <div><span class="text-gray-500">签收日期：</span><span class="text-gray-700">{{ selectedRecord.signDate }}</span></div>
-                                <div><span class="text-gray-500">申诉状态：</span><span :class="['px-2 py-0.5 text-xs font-medium rounded-full inline-block', getStatusClass(selectedRecord.status)]">{{ getStatusLabel(selectedRecord.status) }}</span></div>
+                                <div v-if="selectedRecord.status !== 'pending'"><span class="text-gray-500">申诉状态：</span><span :class="['px-2 py-0.5 text-xs font-medium rounded-full inline-block', getStatusClass(selectedRecord.status)]">{{ getStatusLabel(selectedRecord.status) }}</span></div>
                                 <div v-if="selectedRecord.appealDeadline"><span class="text-gray-500">截止申诉日期：</span><span class="text-gray-700">{{ selectedRecord.appealDeadline }}</span></div>
                                 <div v-if="selectedRecord.reviewTime"><span class="text-gray-500">审核时间：</span><span class="text-gray-700">{{ selectedRecord.reviewTime }}</span></div>
                                 <div class="col-span-4"><span class="text-gray-500">收货地址：</span><span class="text-gray-700">{{ selectedRecord.address }}</span></div>
@@ -1579,7 +1580,7 @@ const PodPenaltyPage = {
                                 <div><span class="text-gray-500">所属网格：</span><span class="text-gray-700">{{ selectedRecord.zone }}</span></div>
                                 <div><span class="text-gray-500">分箱号：</span><span class="text-gray-700">{{ selectedRecord.boxNo }}</span></div>
                                 <div><span class="text-gray-500">签收日期：</span><span class="text-gray-700">{{ selectedRecord.signDate }}</span></div>
-                                <div><span class="text-gray-500">申诉状态：</span><span :class="['px-2 py-0.5 text-xs font-medium rounded-full inline-block', getStatusClass(selectedRecord.status)]">{{ getStatusLabel(selectedRecord.status) }}</span></div>
+                                <div v-if="selectedRecord.status !== 'pending'"><span class="text-gray-500">申诉状态：</span><span :class="['px-2 py-0.5 text-xs font-medium rounded-full inline-block', getStatusClass(selectedRecord.status)]">{{ getStatusLabel(selectedRecord.status) }}</span></div>
                                 <div v-if="selectedRecord.appealDeadline"><span class="text-gray-500">截止申诉日期：</span><span class="text-gray-700">{{ selectedRecord.appealDeadline }}</span></div>
                                 <div v-if="selectedRecord.reviewTime"><span class="text-gray-500">审核时间：</span><span class="text-gray-700">{{ selectedRecord.reviewTime }}</span></div>
                                 <div class="col-span-4"><span class="text-gray-500">收货地址：</span><span class="text-gray-700">{{ selectedRecord.address }}</span></div>
