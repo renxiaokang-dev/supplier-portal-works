@@ -11,7 +11,7 @@ const i18n = {
         
         // POD申诉页面
         workOrder: '工单管理',
-        podPenalty: 'POD不合格',
+        podPenalty: 'POD工单',
         podErrorCount: 'POD错误单量',
         penaltyAmount: '处罚金额',
         trackingNo: '运单号',
@@ -155,7 +155,7 @@ const i18n = {
         
         // POD Penalty Page
         workOrder: 'Work Order',
-        podPenalty: 'POD Non-compliance',
+        podPenalty: 'POD Work Order',
         podErrorCount: 'POD Error Count',
         penaltyAmount: 'Penalty Amount',
         trackingNo: 'Tracking No.',
@@ -298,7 +298,7 @@ const i18n = {
         
         // Página de Penalización POD
         workOrder: 'Orden de Trabajo',
-        podPenalty: 'POD No Conforme',
+        podPenalty: 'POD Orden de Trabajo',
         podErrorCount: 'Cantidad de Errores POD',
         penaltyAmount: 'Monto de Penalización',
         trackingNo: 'Nº de Seguimiento',
@@ -728,17 +728,6 @@ const MainLayout = {
                                                     <span v-if="task.fileSize" class="text-xs text-gray-500">{{ formatFileSize(task.fileSize) }}</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- 进度条（进行中） -->
-                                    <div v-if="task.status === 'processing'" class="mb-3">
-                                        <div class="flex items-center justify-between text-xs text-gray-600 mb-1">
-                                            <span>{{ task.progress }}%</span>
-                                            <span>{{ task.processedRecords }} / {{ task.totalRecords }}</span>
-                                        </div>
-                                        <div class="w-full bg-gray-200 rounded-full h-2">
-                                            <div class="bg-primary h-2 rounded-full transition-all" :style="{ width: task.progress + '%' }"></div>
                                         </div>
                                     </div>
                                     
